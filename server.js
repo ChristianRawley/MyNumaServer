@@ -47,7 +47,7 @@ app.get('/getCourses', async (req, res) => {
 
         if (!subject || !term || !status || !section) return res.status(400).send('Missing required query parameters');
 
-        const url = `https://slbanformsp1-oc.uafs.edu:8888/banprod/hxskschd.P_ListSchClassSimple?sel_subj=${subject}&sel_day=%25%&term=${term}&sel_status=${status}&sel_subj=${subject}&sel_sec=${section}&sel_crse=%25&begin_hh=00&begin_mi=00&end_hh=00&end_mi=00`
+        const url = `https://slbanformsp1-oc.uafs.edu:8888/banprod/hxskschd.P_ListSchClassSimple?sel_subj=abcde&sel_day=abcde&sel_status=abcde&term=${term}&sel_status=${status}&sel_subj=${subject}&sel_sec=%25${section}&sel_crse=&begin_hh=00&begin_mi=00&end_hh=00&end_mi=00`
         const { data } = await axios.get(url, { httpsAgent });
         const $ = cheerio.load(data);
 
