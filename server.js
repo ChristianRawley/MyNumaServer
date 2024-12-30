@@ -73,8 +73,9 @@ app.get('/getCourses', async (req, res) => {
                 const rem = $(columns[19]).text().trim();
                 const instructor = $(columns[21]).text().trim();
                 const weeks = $(columns[22]).text().trim();
+                const subject = $(columns[3]).text().trim();
 
-                courses.push({status, crn, title, crsNum, secNum, meetingTime, date, location, cap, act, rem, instructor, weeks });
+                courses.push({status, crn, title, crsNum, secNum, meetingTime, date, location, cap, act, rem, instructor, weeks, subject });
             }
         });
 
