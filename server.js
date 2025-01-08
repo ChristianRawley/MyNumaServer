@@ -9,7 +9,7 @@ const port = 3000;
 app.use(cors());
 
 const routesPath = path.join(__dirname, 'routes');
-fs.readdirSync(routesPath).forEach((file) => {
+fs.readdirSync(routesPath).forEach(file => {
     if (file.endsWith('.js')) {
         const route = require(path.join(routesPath, file));
         app.use(route);
