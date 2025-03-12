@@ -10,24 +10,21 @@ const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFi
 
 router.get('/getSubjects', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({headless: true});
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-        await page.waitForSelector('#pvExplorationHost');
-        await page.goto(URL);
-        const subjects = await page.evaluate(() => {
-            const subjectElements = document.querySelectorAll(
-                '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible'
-            );
-            const subjects = [];
-            subjectElements.forEach((element) => {
-                const subject = element.textContent.trim();
-                if (subject) {
-                    subjects.push(subject);
-                }
-            });
+        await page.goto(URL, { waitUntil: 'domcontentloaded' });
+        await page.waitForSelector('explanation-host');
+        const subjectXPath = '/html/body/div[1]/report-embed/div/div/div[1]/div/div/div/exploration-container/div/div/docking-container/div/div/div/div/exploration-host/div/div/exploration/div/explore-canvas/div/div[2]/div/div[2]/div[2]/visual-container-repeat/visual-container[5]/transform/div/div[3]/div/div/visual-modern/div/div/div[2]/div/div[2]/div/div[1]/div/div/div[1]/div/span';
+        const subjectElements = await page.$x(subjectXPath);
+        const subjects = [];
+        for (let element of subjectElements) {
+            const text = await page.evaluate(el => el.textContent.trim(), element);
+            if (text) {
+                subjects.push(text);
+            }
+        }
 
-            return subjects;
-        });
+        console.log(subjects);
         await browser.close();
         res.json(subjects);
     } catch (error) {
@@ -35,5 +32,6 @@ router.get('/getSubjects', async (req, res) => {
         res.status(500).send('Error fetching subjects');
     }
 });
+
 
 module.exports = router;
