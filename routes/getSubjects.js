@@ -8,7 +8,6 @@ const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 router.get('/getSubjects', async (req, res) => {
     try {
-        // Launch puppeteer browser
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto(URL, { waitUntil: 'networkidle2' });
@@ -17,16 +16,18 @@ router.get('/getSubjects', async (req, res) => {
             const subjectElements = document.querySelectorAll(
                 '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible > div > div'
             );
+
             const subjects = [];
             subjectElements.forEach((element) => {
-                const subject = element.textContent.trim();
-                if (subject) {
-                    subjects.push(subject);
+                const subjectText = element.querySelector('span') ? element.querySelector('span').textContent.trim() : '';
+                if (subjectText) {
+                    subjects.push(subjectText);
                 }
             });
 
             return subjects;
         });
+
         await browser.close();
         res.json(subjects);
     } catch (error) {
