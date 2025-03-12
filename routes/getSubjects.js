@@ -11,16 +11,12 @@ router.get('/getSubjects', async (req, res) => {
     try {
         const { data } = await axios.get(URL, { httpsAgent });
         const $ = cheerio.load(data);
-        
         const subjects = [];
-        $(document.querySelector("#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible > div > div"))
+        $('#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible > div > div')
             .each((index, element) => {
-                const subject = $(element).find("div > div:nth-child(1) > div > span").text().trim();
-                if (subject) {
-                    subjects.push(subject);
-                }
+                const subject = $(element).text().trim();
+                if (subject) subjects.push(subject);
             });
-
         res.json(subjects);
     } catch (error) {
         console.error('Error fetching subjects:', error);
