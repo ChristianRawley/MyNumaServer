@@ -12,17 +12,18 @@ router.get('/getSubjects', async (req, res) => {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto(URL, { waitUntil: 'domcontentloaded' });
-        await page.waitForXPath(
-            '/html/body/div[1]/report-embed/div/div/div[1]/div/div/div/exploration-container/div/div/docking-container/div/div/div/div/exploration-host/div/div/exploration/div/explore-canvas/div/div[2]/div/div[2]/div[2]/visual-container-repeat/visual-container[5]/transform/div/div[3]/div/div/visual-modern/div/div/div[2]/div/div[2]/div/div[1]/div/div'
-        );
 
-        const elements = await page.$x(
-            '/html/body/div[1]/report-embed/div/div/div[1]/div/div/div/exploration-container/div/div/docking-container/div/div/div/div/exploration-host/div/div/exploration/div/explore-canvas/div/div[2]/div/div[2]/div[2]/visual-container-repeat/visual-container[5]/transform/div/div[3]/div/div/visual-modern/div/div/div[2]/div/div[2]/div/div[1]/div/div'
+        await page.waitForXPath(
+            '/html/body/div[1]/report-embed/div/div/div[1]/div/div/div/exploration-container/div/div/docking-container/div/div/div/div/exploration-host/div/div/exploration/div/explore-canvas/div/div[2]/div/div[2]/div[2]/visual-container-repeat/visual-container[5]/transform/div/div[3]/div/div/visual-modern/div/div/div[2]/div/div[2]/div/div[1]/div/div/div[1]/div/span'
+        );
+        
+        const spanElements = await page.$x(
+            '/html/body/div[1]/report-embed/div/div/div[1]/div/div/div/exploration-container/div/div/docking-container/div/div/div/div/exploration-host/div/div/exploration/div/explore-canvas/div/div[2]/div/div[2]/div[2]/visual-container-repeat/visual-container[5]/transform/div/div[3]/div/div/visual-modern/div/div/div[2]/div/div[2]/div/div[1]/div/div/div[1]/div/span'
         );
 
         const subjects = [];
-        for (const element of elements) {
-            const text = await element.evaluate(el => el.textContent.trim());
+        for (const span of spanElements) {
+            const text = await span.evaluate(el => el.textContent.trim());
             if (text) {
                 subjects.push(text);
             }
@@ -36,6 +37,7 @@ router.get('/getSubjects', async (req, res) => {
         res.status(500).send('Error fetching subjects');
     }
 });
+
 
 
 module.exports = router;
