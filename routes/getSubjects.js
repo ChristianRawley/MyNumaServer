@@ -15,7 +15,7 @@ router.get('/getSubjects', async (req, res) => {
         await page.waitForSelector('#pvExplorationHost');
         const subjects = await page.evaluate(() => {
             const subjectElements = document.querySelectorAll(
-                '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible > div > div > div > span'
+                '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible'
             );
             const subjects = [];
             subjectElements.forEach((element) => {
