@@ -1,21 +1,22 @@
 const express = require('express');
+const axios = require('axios');
+const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
-const https = require('https');
 
 const router = express.Router();
 const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFiNGEtNmRlMjhlZjU1ZDliIiwidCI6IjhjMWE4N2NiLTgwYjctNDEzZi05YWU4LTU1YzZhNTM3MDYwNCJ9';
-const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+
 
 router.get('/getSubjects', async (req, res) => {
     try {
-        // Launch puppeteer browser
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({headless: true});
         const page = await browser.newPage();
-        await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector('#pvExplorationHost');
+        await page.goto(URL);
         const subjects = await page.evaluate(() => {
             const subjectElements = document.querySelectorAll(
-                '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible > div'
+                '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.actualSizeAlignLeft.actualSizeAlignMiddle.actualSizeOrigin > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible'
             );
             const subjects = [];
             subjectElements.forEach((element) => {
