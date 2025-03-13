@@ -5,15 +5,36 @@ const router = express.Router();
 const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFiNGEtNmRlMjhlZjU1ZDliIiwidCI6IjhjMWE4N2NiLTgwYjctNDEzZi05YWU4LTU1YzZhNTM3MDYwNCJ9';
 const SUBJECT_SELECTOR = '#pvExplorationHost div.slicer-content-wrapper div.slicerBody div div.scrollbar-inner div div div div span';
 
+async function scrollToBottom(page) {
+    await page.evaluate(async (scrollRegionSelector) => {
+        const scrollRegion = document.querySelector(scrollRegionSelector);
+        if (scrollRegion) {
+            let lastScrollTop = scrollRegion.scrollTop;
+            while (true) {
+                scrollRegion.scrollTop = scrollRegion.scrollHeight;
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for new elements to load
+                if (scrollRegion.scrollTop === lastScrollTop) {
+                    break;
+                }
+                lastScrollTop = scrollRegion.scrollTop;
+            }
+        }
+    }, SCROLL_REGION_SELECTOR);
+}
+
 router.get('/getSubjects', async (req, res) => {
     try {
         const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
+
         await page.goto(URL, { waitUntil: 'networkidle2'});
         await page.waitForSelector(SUBJECT_SELECTOR);
+        await scrollToBottom(page);
+
         const subjects = await page.$$eval(SUBJECT_SELECTOR, spans => 
             spans.map(span => span.innerText.trim())
         );
+        
         await browser.close();
         res.json({ subjects });
     } catch (error) {
