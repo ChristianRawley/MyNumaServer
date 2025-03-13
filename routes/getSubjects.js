@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const router = express.Router();
+import {setTimeout} from "node:timers/promises";
+
 
 const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFiNGEtNmRlMjhlZjU1ZDliIiwidCI6IjhjMWE4N2NiLTgwYjctNDEzZi05YWU4LTU1YzZhNTM3MDYwNCJ9';
 const SUBJECT_SELECTOR = '#pvExplorationHost div.slicer-content-wrapper div.slicerBody div div.scrollbar-inner div div div div span';
@@ -17,9 +19,7 @@ async function scrollAndCollect(page) {
                 scrollRegion.scrollTop = scrollRegion.scrollHeight;
             }
         }, SCROLL_REGION_SELECTOR);
-
         await setTimeout(1000);
-
         const subjects = await page.$$eval(SUBJECT_SELECTOR, spans => {
             return spans.map(span => span.innerText.trim())
         });
