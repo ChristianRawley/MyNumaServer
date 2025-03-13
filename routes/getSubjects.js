@@ -4,6 +4,8 @@ const router = express.Router();
 
 const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFiNGEtNmRlMjhlZjU1ZDliIiwidCI6IjhjMWE4N2NiLTgwYjctNDEzZi05YWU4LTU1YzZhNTM3MDYwNCJ9';
 const SUBJECT_SELECTOR = '#pvExplorationHost div.slicer-content-wrapper div.slicerBody div div.scrollbar-inner div div div div span';
+const SCROLL_REGION_SELECTOR = '#pvExplorationHost > div > div > exploration > div > explore-canvas > div > div.canvasFlexBox > div > div.displayArea.disableAnimations.fitToPage > div.visualContainerHost.visualContainerOutOfFocus > visual-container-repeat > visual-container:nth-child(5) > transform > div > div.visualContent > div > div > visual-modern > div > div > div.slicer-content-wrapper > div > div.slicerBody > div > div.scrollbar-inner.scroll-content.scroll-scrolly_visible';
+
 
 async function scrollToBottom(page) {
     await page.evaluate(async (scrollRegionSelector) => {
@@ -12,7 +14,7 @@ async function scrollToBottom(page) {
             let lastScrollTop = scrollRegion.scrollTop;
             while (true) {
                 scrollRegion.scrollTop = scrollRegion.scrollHeight;
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for new elements to load
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 if (scrollRegion.scrollTop === lastScrollTop) {
                     break;
                 }
