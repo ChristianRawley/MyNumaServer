@@ -8,7 +8,7 @@ router.get('/getSubjects', async (req, res) => {
     try {
         res.setTimeout(60000);
 
-        const browser = awaitpuppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto(URL, { waitUntil: 'networkidle2', timeout: 60000 });
         await page.waitForFunction(() => {
