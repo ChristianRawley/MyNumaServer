@@ -7,14 +7,13 @@ const SUBJECT_SELECTOR = '#pvExplorationHost div.slicer-content-wrapper div.slic
 
 router.get('/getSubjects', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
         await page.goto(URL, { waitUntil: 'networkidle2' });
         await page.waitForSelector(SUBJECT_SELECTOR);
-
-        const subjects = await page.$$eval(SUBJECT_SELECTOR, spans => {
-            return spans.map(span => span.innerText.trim()).filter(text => text.match(/UAFS\d+/));
-        });
+        const subjects = await page.$$eval(SUBJECT_SELECTOR, spans => 
+            spans.map(span => span.innerText.trim()).filter(text => text.length > 0 && text.includes("UAFS"))
+        );
 
         await browser.close();
         res.json({ subjects });
