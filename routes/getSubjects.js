@@ -6,15 +6,18 @@ const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFi
 
 router.get('/getSubjects', async (req, res) => {
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        res.setTimeout(60000);
+
+        const browser = awaitpuppeteer.launch({ headless: true });
         const page = await browser.newPage();
-        await page.goto(URL, { waitUntil: 'networkidle2' });
-        await page.waitForSelector('#pvExplorationHost');
+        await page.goto(URL, { waitUntil: 'networkidle2', timeout: 60000 });
+        await page.waitForFunction(() => {
+            return document.querySelectorAll('#pvExplorationHost div.slicer-content-wrapper div.slicerBody div div.scrollbar-inner div div div div span').length > 0;
+        }, { timeout: 60000 });
         const subjects = await page.evaluate(() => {
-            let subjectElements = document.querySelectorAll(
+            return Array.from(document.querySelectorAll(
                 '#pvExplorationHost div.slicer-content-wrapper div.slicerBody div div.scrollbar-inner div div div div span'
-            );
-            return Array.from(subjectElements).map(el => el.innerText.trim());
+            )).map(el => el.innerText.trim());
         });
 
         await browser.close();
