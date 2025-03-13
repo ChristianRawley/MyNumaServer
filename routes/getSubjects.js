@@ -18,7 +18,7 @@ async function scrollAndCollect(page) {
             }
         }, SCROLL_REGION_SELECTOR);
 
-        await page.waitForTimeout(1000);
+        await setTimeout(1000);
 
         const subjects = await page.$$eval(SUBJECT_SELECTOR, spans => {
             return spans.map(span => span.innerText.trim())
