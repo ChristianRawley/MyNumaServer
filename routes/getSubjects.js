@@ -7,8 +7,7 @@ const URL = 'https://app.powerbi.com/view?r=eyJrIjoiYTMzNmY3ZTgtZDdkNy00M2E2LWFi
 router.get('/getSubjects', async (req, res) => {
     try {
         res.setTimeout(60000);
-
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
         await page.goto(URL, { waitUntil: 'networkidle2', timeout: 60000 });
         await page.waitForFunction(() => {
@@ -24,7 +23,7 @@ router.get('/getSubjects', async (req, res) => {
         res.json({ subjects });
     } catch (error) {
         console.error('Error fetching subjects:', error);
-        res.status(500).send('Error fetching subjects: '+error);
+        res.status(500).send('Error fetching subjects: ' + error);
     }
 });
 
