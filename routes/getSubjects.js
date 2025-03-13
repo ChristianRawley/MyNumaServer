@@ -24,7 +24,7 @@ router.get('/getSubjects', async (req, res) => {
         res.json({ subjects });
     } catch (error) {
         console.error('Error fetching subjects:', error);
-        res.status(500).send('Error fetching subjects');
+        res.status(500).send('Error fetching subjects: '+error);
     }
 });
 
