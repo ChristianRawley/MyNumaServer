@@ -26,7 +26,7 @@ router.get('/getEvents', async (req, res) => {
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle0' });
 
-        const contentSelector = '#main-content > events > ng-outlet > events-tile > div';
+        const contentSelector = '#main-content > events';
         const isContentLoaded = await waitForElement(page, contentSelector);
 
         if (!isContentLoaded) {
