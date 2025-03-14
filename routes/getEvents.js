@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const router = express.Router();
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const waitForElement = async (page, selector, retries = 5, delay = 3000) => {
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -13,7 +14,7 @@ const waitForElement = async (page, selector, retries = 5, delay = 3000) => {
                 return false;
             }
             console.log(`Retrying attempt ${attempt}...`);
-            await page.waitForTimeout(delay);
+            await sleep(delay);
         }
     }
 };
