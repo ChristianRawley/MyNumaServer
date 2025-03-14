@@ -9,13 +9,11 @@ router.get('/getEvents', async (req, res) => {
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
 
-        await page.waitForSelector('#main-content > events');
+        await page.waitForSelector('#main-content > events > div.header.header-short.events > div.header-overlay');
 
         await page.evaluate(() => {
             window.scrollTo(0, document.body.scrollHeight);
         });
-
-        await page.waitForTimeout(2000);
 
         const events = await page.evaluate(() => {
             const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div tile-component');
