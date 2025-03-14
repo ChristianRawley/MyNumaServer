@@ -8,17 +8,17 @@ router.get('/getEvents', async (req, res) => {
         const page = await browser.newPage();
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
-        await page.waitForSelector('#main-content > events > ng-outlet > events-tile > div');
+        await page.waitForSelector('#main-content > events > ng-outlet > events-tile > div#main-content > events > ng-outlet > events-tile > div > div:nth-child(1) > tile-component');
 
         const events = await page.evaluate(() => {
             const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div');
             return Array.from(eventElements).map(event => {
                 const titleElement = event.querySelector('tile-component div div.card-header.ch-alt h2 a');
-                const imageElement = event.querySelector('img');
+                //const imageElement = event.querySelector('img');
 
                 return {
-                    title: titleElement ? titleElement.innerText.trim() : 'No title',
-                    image: imageElement ? imageElement.src : 'No image',
+                    title: titleElement,
+                    //image: imageElement ? imageElement.src : 'No image',
                 };
             });
         });
