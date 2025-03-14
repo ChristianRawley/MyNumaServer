@@ -9,7 +9,7 @@ router.get('/getEvents', async (req, res) => {
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
 
-        await page.waitForSelector('#main-content > events > div.header.header-short.events > div.header-overlay');
+        await page.waitForSelector('#main-content > events');
 
         await page.evaluate(() => {
             window.scrollTo(0, document.body.scrollHeight);
