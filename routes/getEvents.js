@@ -1,36 +1,39 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
-router.get('/getEvents', async (req, res) => {
+const screenshotDir = path.join(__dirname, 'public', 'screenshots');
+
+if (!fs.existsSync(screenshotDir)) {
+    fs.mkdirSync(screenshotDir, { recursive: true });
+}
+
+router.get('/getScreenshot', async (req, res) => {
     try {
         const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
 
-        await page.waitForSelector('#main-content > events');
+        await page.waitForSelector('#main-content > events', { visible: true, timeout: 30000 });
 
-        await page.evaluate(() => {
-            window.scrollTo(0, document.body.scrollHeight);
-        });
+        const timestamp = Date.now();
+        const screenshotFilename = `screenshot_${timestamp}.png`;
+        const screenshotPath = path.join(screenshotDir, screenshotFilename);
 
-        const events = await page.evaluate(() => {
-            const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div tile-component');
-
-            return Array.from(eventElements).map(event => {
-                const titleElement = event.querySelector('div div.card-header.ch-alt h2 a');
-                return {
-                    title: titleElement ? titleElement.innerText.trim() : 'No title',
-                };
-            });
-        });
+        await page.screenshot({ path: screenshotPath });
 
         await browser.close();
-        res.json(events);
+
+        const screenshotUrl = `/screenshots/${screenshotFilename}`;
+
+        res.json({ screenshotUrl });
+
     } catch (error) {
-        console.error('Error fetching events:', error);
-        res.status(500).send('Error fetching events: ' + error);
+        console.error('Error taking screenshot:', error);
+        res.status(500).send('Error taking screenshot: ' + error);
     }
 });
 
