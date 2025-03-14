@@ -8,7 +8,7 @@ router.get('/getEvents', async (req, res) => {
         const page = await browser.newPage();
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
-        await page.waitForSelector('#main-content > events > ng-outlet');
+        await page.waitForSelector('#main-content > events');
 
         const events = await page.evaluate(() => {
             const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div tile-component');
