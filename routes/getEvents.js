@@ -15,7 +15,7 @@ router.get('/getEvents', async (req, res) => {
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'domcontentloaded', timeout: 10000 });
 
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        await delay(1000);
+        await delay(2000);
 
         await page.reload({ waitUntil: 'domcontentloaded' });
         
@@ -26,7 +26,6 @@ router.get('/getEvents', async (req, res) => {
                 const timer = setInterval(() => {
                     window.scrollBy(0, distance);
                     totalHeight += distance;
-
                     if (totalHeight >= document.body.scrollHeight) {
                         clearInterval(timer);
                         resolve();
@@ -52,7 +51,7 @@ router.get('/getEvents', async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching events:', error);
-        res.status(500).send('Error fetching events: ', error);
+        res.status(500).send({ error: 'Error fetching' });
     }
 });
 

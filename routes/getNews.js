@@ -32,7 +32,7 @@ router.get('/getNews/:page?', async (req, res) => {
         res.json(news);
     } catch (error) {
         console.error('Error fetching news:', error);
-        res.status(500).send('Error fetching news');
+        res.status(500).send({ error: 'Error fetching' });
     }
 });
 
