@@ -8,13 +8,14 @@ router.get('/getEvents', async (req, res) => {
         const page = await browser.newPage();
 
         await page.goto('https://uafs.presence.io/events', { waitUntil: 'networkidle2' });
-        await page.waitForSelector('#main-content > events');
-        
+        await page.waitForSelector('#main-content > events > ng-outlet > events-tile > div');
+
         const events = await page.evaluate(() => {
-            const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div tile-component');
+            const eventElements = document.querySelectorAll('#main-content > events > ng-outlet > events-tile > div > div');
             return Array.from(eventElements).map(event => {
-                const titleElement = event.querySelector('div > div.card-header.ch-alt > h2');
+                const titleElement = event.querySelector('tile-component div div.card-header.ch-alt h2 a');
                 const imageElement = event.querySelector('img');
+
                 return {
                     title: titleElement ? titleElement.innerText.trim() : 'No title',
                     image: imageElement ? imageElement.src : 'No image',
@@ -26,7 +27,7 @@ router.get('/getEvents', async (req, res) => {
         res.json(events);
     } catch (error) {
         console.error('Error fetching events:', error);
-        res.status(500).send('Error fetching events');
+        res.status(500).send('Error fetching events: ' + error);
     }
 });
 
