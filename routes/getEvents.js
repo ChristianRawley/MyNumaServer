@@ -22,12 +22,11 @@ router.get('/getEvents', async (req, res) => {
             });
         });
 
+        await browser.close();
         res.json(events);
     } catch (error) {
         console.error('Error fetching events:', error);
         res.status(500).send('Error fetching events');
-    } finally {
-        if (browser) await browser.close();
     }
 });
 
