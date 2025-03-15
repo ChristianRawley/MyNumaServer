@@ -31,10 +31,10 @@ router.get('/getEvents', async (req, res) => {
         await reloadWithRetry(page);
         await page.waitForSelector('#main-content > events > ng-outlet > events-tile > div > dir-pagination-controls > ul > li:nth-child(1) > div > button', { visible: true });
         await page.click('#main-content > events > ng-outlet > events-tile > div > dir-pagination-controls > ul > li:nth-child(1) > div > button');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await page.waitForSelector('#main-content > events > ng-outlet > events-tile > div > dir-pagination-controls > ul > li:nth-child(1) > div > ul > li:nth-child(3) > a', { visible: true });
         await page.click('#main-content > events > ng-outlet > events-tile > div > dir-pagination-controls > ul > li:nth-child(1) > div > ul > li:nth-child(3) > a');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         await page.waitForFunction(() => {
             return document.querySelectorAll('tile-component .card-header h2 a').length > 0;
